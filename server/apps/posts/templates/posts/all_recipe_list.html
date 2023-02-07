@@ -44,6 +44,10 @@
                         {% csrf_token %}
                         <input type="submit" , value="삭제하기" />
                     </form>
+                    <form action="{% url 'posts:update' post.pk %}" method="get">
+                        {% csrf_token %}
+                        <input type="submit" , value="수정하기" />
+                    </form>
                     {% endfor %}
                 </div>
             </div>
