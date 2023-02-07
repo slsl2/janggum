@@ -6,6 +6,8 @@ from .models import User, Post, Comment
 from django.http.request import HttpRequest
 
 
+all_used_ingredient_set = set()
+
 #메인 페이지 => main.html을 기본으로 보여주고 재료로 검색시 recipe list 창으로 context 보내며 render
 def main(request):
     #레시피 검색 시 context 넘겨주기 위한 작업
@@ -124,9 +126,17 @@ def posts_junggum_list(request:HttpRequest, *args, **kwargs):
 
 # create page
 def create(request:HttpRequest, *args, **kwargs):
+
+    context = {
+        "ingredientList" : all_used_ingredient_set,
+    }
     if request.method == "POST":
         #여러 재료 input들 한꺼번에 가져와 저장
         ingredients = request.POST.getlist('ingredient[]'),
+        print(ingredients)
+        ingredientList = ingredients[0]
+        for ele in ingredientList:
+            all_used_ingredient_set.add(ele)
         Post.objects.create(
             ingredient = ingredients,
             user=request.user,
@@ -135,7 +145,7 @@ def create(request:HttpRequest, *args, **kwargs):
             content=request.POST["content"],
         )
         return redirect("/")
-    return render(request, "posts/recipe_create_page.html")
+    return render(request, "posts/recipe_create_page.html", context=context)
 
 # update
 def posts_update(request:HttpRequest, pk, *args, **kwargs):
@@ -152,6 +162,10 @@ def posts_update(request:HttpRequest, pk, *args, **kwargs):
         post.content=request.POST["content"]
         post.ingredient = request.POST.getlist('ingredient[]'),
         post.save()
+        
+
+        for ele in post.ingredient[0]:
+            all_used_ingredient_set.add(ele)
         return redirect(f"/")
     #수정 페이지에 원래 레시피 정보 뜨게끔 context로 보냄
     context = {
