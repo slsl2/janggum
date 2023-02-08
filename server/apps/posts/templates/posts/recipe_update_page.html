@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+i<!DOCTYPE html>
 <html lang="ko">
     <head>
         <meta charset="UTF-8" />
@@ -29,7 +29,10 @@
                     <input placeholder="재료" name="ingredient[]" />
                     <input placeholder="재료" name="ingredient[]" /> {% endcomment %}
                 </div>
-                <input type="file" name="photo" />
+                <input type="file" name="photo" value="{{post.photo.url}}"/>
+                <div>
+                    <img src="{{ post.photo.url }}"/>
+                </div>
                 <textarea name="content" placeholder="레시피 소개">{{post.content}}</textarea>
             </div>
             <div>
